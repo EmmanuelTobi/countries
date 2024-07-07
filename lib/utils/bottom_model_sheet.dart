@@ -1,4 +1,11 @@
+import 'package:countries/utils/button.dart';
+import 'package:countries/utils/colors.dart';
+import 'package:countries/utils/expanding_view.dart';
+import 'package:countries/utils/text.dart';
+import 'package:countries/views/countries_home/countries_home_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 void modalBottomSheetMenu({
   required BuildContext context,
@@ -17,13 +24,12 @@ void modalBottomSheetMenu({
               topRight: Radius.circular(radius ?? 10)
           )
       ),
-      backgroundColor: color ?? Theme.of(context).backgroundColor,
+      backgroundColor: Colors.white,
       builder: (builder) {
         return SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: height,
-            color: Colors.white,
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
@@ -32,4 +38,236 @@ void modalBottomSheetMenu({
         );
       }
   );
+}
+
+void listHelperPicker({
+  required List<String?> listString,
+  List<String?>? listString2,
+  List<String?>? selectedListString,
+  List<String?>? selectedListString2,
+  ValueNotifier<List<String>>? valueNotifier,
+  String? title,
+  Function(String? selected, String? type)? selected,
+  double? height,
+  BuildContext? context,
+  CountriesHomeViewModel? countriesHomeViewModel
+}) {
+
+  modalBottomSheetMenu(
+    context: context!,
+    child: SingleChildScrollView(
+      child: ListDisplayView(
+          listString: listString,
+          listString2: listString2,
+          selectedListString: selectedListString,
+          selectedListString2: selectedListString2,
+          valueNotifier: valueNotifier,
+          title: title,
+          selected: selected,
+          height: height,
+          countriesHomeViewModel: countriesHomeViewModel,
+      ),
+    ),
+  );
+}
+
+class ListDisplayView extends StatelessWidget {
+
+  ListDisplayView({
+    super.key,
+    this.listString,
+    this.listString2,
+    this.selectedListString,
+    this.selectedListString2,
+    this.valueNotifier,
+    this.title,
+    this.selected,
+    this.height,
+    this.context,
+    this.countriesHomeViewModel,
+  });
+
+  List<String?>? listString;
+  List<String?>? listString2;
+  List<String?>? selectedListString;
+  List<String?>? selectedListString2;
+  ValueNotifier<List<String>>? valueNotifier;
+  String? title;
+  Function(String? selected, String? type)? selected;
+  double? height;
+  CountriesHomeViewModel? countriesHomeViewModel;
+  BuildContext? context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //height: 550,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              NormalText(
+                text: title,
+                fontWeight: FontWeight.w700,
+                textColor: XColors.black(),
+                fontSize: 15,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.close_rounded, size: 24,),
+              )
+            ],
+          ),
+          const SizedBox(height: 20),
+          ExpandingContainer(
+            context: context,
+            actualHeight: 60,
+            expandedHeight: 400,
+            expand: false,
+            title: NormalText(
+              text: 'Continent',
+              textColor: XColors.black(),
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+            body: ViewModelBuilder<CountriesHomeViewModel>.reactive(
+                viewModelBuilder: () => countriesHomeViewModel ?? CountriesHomeViewModel(),
+                disposeViewModel: false,
+                builder: (context, model, child) {
+                return SizedBox(
+                  child: ListView.builder(
+                    itemCount: listString!.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, index) {
+                      return Padding(
+                        padding:
+                        const EdgeInsets.only(left: 0, top: 5, bottom: 0),
+                        child: InkWell(
+                          onTap: () {
+                            selected!(listString![index], 'region');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              NormalText(
+                                text: listString![index],
+                                textColor: XColors.black().withOpacity(0.4),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              Checkbox(
+                                activeColor: XColors.black(),
+                                focusColor: XColors.black().withOpacity(0.3),
+                                value: selectedListString!.contains(listString![index]),
+                                onChanged: (bool? value) {
+                                  selected!(listString![index], 'region');
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            ),
+          ),
+          if(listString2!.isNotEmpty) ... [
+            ExpandingContainer(
+              context: context,
+              actualHeight: 60,
+              expandedHeight: 450,
+              expand: false,
+              title: NormalText(
+                text: 'Timezone',
+                textColor: XColors.black(),
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+              body: ViewModelBuilder<CountriesHomeViewModel>.reactive(
+                  viewModelBuilder: () => countriesHomeViewModel ?? CountriesHomeViewModel(),
+                  disposeViewModel: false,
+                  builder: (context, model, child) {
+                  return SizedBox(
+                    child: ListView.builder(
+                      itemCount: listString2!.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, index) {
+                        return Padding(
+                          padding:
+                          const EdgeInsets.only(left: 0, top: 5, bottom: 0),
+                          child: InkWell(
+                            onTap: () {
+                              selected!(listString2![index], 'gmt');
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                NormalText(
+                                  text: listString2![index],
+                                  textColor: XColors.black().withOpacity(0.4),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                Checkbox(
+                                  activeColor: XColors.black(),
+                                  focusColor: XColors.black().withOpacity(0.3),
+                                  value: selectedListString2!.contains(listString2![index]),
+                                  onChanged: (bool? value) {
+                                    selected!(listString2![index], 'gmt');
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              ),
+            ),
+          ],
+          const SizedBox(height: 10),
+          Row(
+            children: [
+            XButton(
+              onPressed: () {
+
+              },
+              text: 'Reset',
+              isOutline: true,
+              radius: 5,
+              textColor: Colors.black,
+              height: 45,
+              buttonColor: XColors.primaryColor(),
+              width: 110,
+            ),
+            const SizedBox(width: 20,),
+            Expanded(
+              child: XButton(
+                onPressed: () {
+
+                },
+                text: 'Show results',
+                radius: 5,
+                height: 45,
+                buttonColor: Colors.deepOrangeAccent,
+                width: 110,
+              ),
+            ),
+          ],),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 }

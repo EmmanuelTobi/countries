@@ -129,7 +129,7 @@ class MainInputField extends StatelessWidget {
                     width: 2
                 )
             ),
-            contentPadding: const EdgeInsets.only(bottom: 17, left: 10.0, right: 10.0, top: 17),
+            contentPadding: const EdgeInsets.only(bottom: 10, left: 10.0, right: 10.0, top: 10),
             labelText: label,
             labelStyle: TextStyle(color: XColors.textColor(), fontWeight: FontWeight.w400),
           ),

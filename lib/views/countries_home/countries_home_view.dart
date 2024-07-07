@@ -1,4 +1,4 @@
-import 'package:countries/models/country_data_model.dart';
+import 'package:countries/utils/bottom_model_sheet.dart';
 import 'package:countries/utils/colors.dart';
 import 'package:countries/utils/decorator.dart';
 import 'package:countries/utils/extensions.dart';
@@ -7,6 +7,7 @@ import 'package:countries/utils/navigator_handler.dart';
 import 'package:countries/utils/text.dart';
 import 'package:countries/views/countries_home/countries_home_view_model.dart';
 import 'package:countries/views/countries_home/country_details_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +32,20 @@ class CountriesHome extends StatelessWidget {
                     },
                     onFilterTap: () {
 
-                    },
+                      listHelperPicker(
+                      title: 'Filter',
+                      listString: model.regionFilters,
+                      listString2: model.gmtFilters,
+                      selectedListString: model.selectedRegionFilters,
+                      selectedListString2: model.selectedGmtFilters,
+                      countriesHomeViewModel: model,
+                      selected: (s, type) {
+                        model.updateSelectedFilteringList(s: s, filterType: type);
+                      },
+                      context: context,
+                    );
+
+                  },
                     onLanguageTap: () {
 
                     },
@@ -54,7 +68,8 @@ class CountriesHome extends StatelessWidget {
                           return CountriesListBuild(
                             image: model.getCountriesAlphabetically(letter: model.letters![index])![i].flag,
                             country: model.getCountriesAlphabetically(letter: model.letters![index])![i].name ?? 'Country',
-                            capital: model.getCountriesAlphabetically(letter: model.letters![index])![i].capital!.isNotEmpty ? model.getCountriesAlphabetically(letter: model.letters![index])![i].capital![0] : '',
+                            capital: model.getCountriesAlphabetically(letter: model.letters![index])![i].capital!.isNotEmpty ?
+                            model.getCountriesAlphabetically(letter: model.letters![index])![i].capital![0] : '',
                             onCountryTap: () {
                               model.updateCurrentCountryModal(cmodel: model.getCountriesAlphabetically(letter: model.letters![index])![i]);
                               navigate(context, CountryDetailsView(countriesHomeViewModel: model,));
@@ -62,12 +77,9 @@ class CountriesHome extends StatelessWidget {
                           );
 
                         }),
-
                       ],
                     );
-
                   }),
-
                 ],
               ),
             ),
@@ -211,128 +223,41 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
             ],
           ),
         ),
-        Container(
-          height: 40,
-          width: 86,
-          decoration: BoxDecorators.containerDecoration(
-              hasOutline: true,
-              outlineWidth: 1,
-              radius: 4,
-              outlineColor: XColors.textColor().withOpacity(0.1)
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: SvgPicture.asset(
-                  'filter'.toSVG(),
-                  fit: BoxFit.contain,
+        GestureDetector(
+          onTap: () => onFilterTap!(),
+          child: Container(
+            height: 40,
+            width: 86,
+            decoration: BoxDecorators.containerDecoration(
+                hasOutline: true,
+                outlineWidth: 1,
+                radius: 4,
+                outlineColor: XColors.textColor().withOpacity(0.1)
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: SvgPicture.asset(
+                    'filter'.toSVG(),
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10,),
-              NormalText(
-                text: 'Filter',
-                textColor: XColors.textColor(),
-                fontSize: 12,
-              )
-            ],
+                const SizedBox(width: 10,),
+                NormalText(
+                  text: 'Filter',
+                  textColor: XColors.textColor(),
+                  fontSize: 12,
+                )
+              ],
+            ),
           ),
         ),
       ],),
     ],);
   }
 
-}
-
-class OnFilterSelectionView extends ViewModelWidget<CountriesHomeViewModel> {
-
-  const OnFilterSelectionView({
-    super.key,
-    this.onFilterSelected
-  });
-
-  final Function(String? s)? onFilterSelected;
-
-  @override
-  Widget build(BuildContext context, CountriesHomeViewModel viewModel) {
-    return Column(children: [
-
-    ],);
-  }
-
-}
-
-class ExpandingContainer extends StatefulWidget {
-
-  ExpandingContainer({
-    super.key,
-    this.context,
-    this.title,
-    this.actualHeight,
-    this.expandedHeight,
-    this.expand = false,
-    this.body
-  });
-
-  final BuildContext? context;
-  final Widget? title;
-  final Widget? body;
-  final bool? expand;
-  double? actualHeight = 20;
-  final double? expandedHeight;
-
-  @override
-  State<ExpandingContainer> createState() => _ExpandingContainerState();
-}
-
-class _ExpandingContainerState extends State<ExpandingContainer> {
-
-  ValueNotifier<bool>? containerExpandedState;
-
-  @override
-  void initState() {
-    containerExpandedState = ValueNotifier(widget.expand!);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: containerExpandedState!,
-        builder: (context, dynamic value, child) {
-          return AnimatedContainer(
-            color: XColors.background(),
-            height: widget.actualHeight,
-            curve: Curves.fastOutSlowIn,
-            duration: const Duration(seconds: 1),
-            child: Column(children: [
-              GestureDetector(
-                onTap: () {
-                  if(value == true) {
-                    containerExpandedState!.value = false;
-                    widget.actualHeight = 50;
-                  } else {
-                    containerExpandedState!.value = true;
-                    widget.actualHeight = widget.expandedHeight;
-                  }
-                },
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: widget.title!,
-                    ),
-                    Icon(Icons.keyboard_arrow_down_rounded, size: 26, color: XColors.textColor(),),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15,),
-              containerExpandedState!.value != false ? Flexible(child: widget.body!) : Container(),
-            ],),
-          );
-        }
-    );
-  }
 }
 
