@@ -2,6 +2,8 @@ import 'package:countries/models/country_data_model.dart';
 import 'package:countries/services/countries_services.dart';
 import 'package:countries/utils/locator_setup.dart';
 import 'package:countries/utils/themes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 
 class CountriesHomeViewModel extends BaseViewModel {
@@ -22,6 +24,12 @@ class CountriesHomeViewModel extends BaseViewModel {
 
   List<String> selectedGmtFilters = [];
   List<String> selectedRegionFilters = [];
+
+  int currentIndex = 0;
+  final PageController pageController = PageController(
+      keepPage: true,
+      initialPage: 0
+  );
 
   bool isSearching = false;
 
@@ -86,6 +94,73 @@ class CountriesHomeViewModel extends BaseViewModel {
      notifyListeners();
 
      return filteredCountriesData;
+  }
+
+
+  List<Widget>? pages({String? img1, String? img2, String? img3}) {
+
+    return <Widget> [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: SizedBox(
+          // height: 40,
+          // width: 50,
+          child: SvgPicture.network(
+            img1!,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: SizedBox(
+          // height: 40,
+          // width: 50,
+          child: SvgPicture.network(
+            img2!,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+      if(img3!.isNotEmpty) ... [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(7),
+          child: SizedBox(
+            height: 40,
+            width: 50,
+            child: SvgPicture.network(
+              img3!,
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+      ]
+
+    ];
+
+  }
+
+  void onPageChanged(int index) {
+    currentIndex = index;
+    pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linearToEaseOut);
+  }
+
+  void onPageChangeWithUserTap({String? action}) {
+
+    print(pageController.page);
+
+    if(action == 'back') {
+
+      if(pageController.page != 0) {
+        pageController.animateToPage(pageController.initialPage-1, duration: const Duration(milliseconds: 300), curve: Curves.linearToEaseOut);
+      }
+
+    } else {
+
+      pageController.animateToPage(pageController.initialPage+1, duration: const Duration(milliseconds: 300), curve: Curves.linearToEaseOut);
+
+    }
+
   }
 
   void updateSelectedFilteringList({String? s, String? filterType}) {
