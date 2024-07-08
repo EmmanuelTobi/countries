@@ -3,12 +3,14 @@ import 'dart:isolate';
 import 'package:countries/models/country_data_model.dart';
 import 'package:countries/services/api_helper.dart';
 import 'package:countries/services/api_routes.dart';
+import 'package:countries/utils/themes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 
 class CountriesServices {
 
   List<CountryDataModel>? countriesDataList = [];
+  AppThemeMode? appThemeMode = AppThemeMode.SYSTEM;
 
   List<String>? countryRegions = [
     "Asia",

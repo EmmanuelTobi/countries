@@ -1,4 +1,6 @@
+import 'package:countries/services/countries_services.dart';
 import 'package:countries/utils/locator_setup.dart';
+import 'package:countries/utils/themes.dart';
 import 'package:countries/views/countries_home/countries_home_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,12 +17,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          bottomSheetTheme: const BottomSheetThemeData(surfaceTintColor: Colors.white),
-        useMaterial3: true,
+      debugShowCheckedModeBanner: false,
+      theme: ThemesSetup.getThemeDataFromThemeMode(
+          context,
+          serviceLocator<CountriesServices>().appThemeMode!
       ),
       home: const CountriesHome(),
     );
