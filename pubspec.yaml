@@ -30,3 +30,17 @@ flutter:
 
   assets:
     - assets/images/
+
+  fonts:
+    - family: Axiforma
+      fonts:
+        - asset: assets/fonts/axiforma-thin.ttf
+          weight: 400
+        - asset: assets/fonts/axiforma-medium.ttf
+          weight: 700
+        - asset: assets/fonts/axiforma-heavy.ttf
+          weight: 900
+        - asset: assets/fonts/axiforma-black.ttf
+          weight: 600
+        - asset: assets/fonts/axiforma-regular.ttf
+          weight: 500
