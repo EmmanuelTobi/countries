@@ -24,7 +24,7 @@ void modalBottomSheetMenu({
               topRight: Radius.circular(radius ?? 10)
           )
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: XColors.white(),
       builder: (builder) {
         return SingleChildScrollView(
           child: Container(
@@ -102,6 +102,7 @@ class ListDisplayView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //height: 550,
+      color: Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
@@ -112,7 +113,7 @@ class ListDisplayView extends StatelessWidget {
               NormalText(
                 text: title,
                 fontWeight: FontWeight.w700,
-                textColor: XColors.black(),
+                textColor: XColors.textColor(),
                 fontSize: 15,
               ),
               GestureDetector(
@@ -131,7 +132,7 @@ class ListDisplayView extends StatelessWidget {
             expand: false,
             title: NormalText(
               text: 'Continent',
-              textColor: XColors.black(),
+              textColor: XColors.textColor(),
               fontSize: 16,
               fontWeight: FontWeight.w400,
             ),
@@ -157,13 +158,13 @@ class ListDisplayView extends StatelessWidget {
                             children: [
                               NormalText(
                                 text: listString![index],
-                                textColor: XColors.black().withOpacity(0.4),
+                                textColor:  XColors.textColor().withOpacity(0.7),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                               ),
                               Checkbox(
-                                activeColor: XColors.black(),
-                                focusColor: XColors.black().withOpacity(0.3),
+                                activeColor: XColors.textColor(),
+                                focusColor: XColors.textColor().withOpacity(0.3),
                                 value: selectedListString!.contains(listString![index]),
                                 onChanged: (bool? value) {
                                   selected!(listString![index], 'region');
@@ -187,7 +188,7 @@ class ListDisplayView extends StatelessWidget {
               expand: false,
               title: NormalText(
                 text: 'Timezone',
-                textColor: XColors.black(),
+                textColor: XColors.textColor(),
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -213,13 +214,13 @@ class ListDisplayView extends StatelessWidget {
                               children: [
                                 NormalText(
                                   text: listString2![index],
-                                  textColor: XColors.black().withOpacity(0.4),
+                                  textColor: XColors.textColor().withOpacity(0.7),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 Checkbox(
-                                  activeColor: XColors.black(),
-                                  focusColor: XColors.black().withOpacity(0.3),
+                                  activeColor: XColors.textColor(),
+                                  focusColor: XColors.textColor().withOpacity(0.3),
                                   value: selectedListString2!.contains(listString2![index]),
                                   onChanged: (bool? value) {
                                     selected!(listString2![index], 'gmt');
@@ -246,9 +247,9 @@ class ListDisplayView extends StatelessWidget {
               text: 'Reset',
               isOutline: true,
               radius: 5,
-              textColor: Colors.black,
+              textColor: XColors.textColor(),
               height: 45,
-              buttonColor: XColors.primaryColor(),
+              buttonColor: XColors.textColor(),
               width: 110,
             ),
             const SizedBox(width: 20,),

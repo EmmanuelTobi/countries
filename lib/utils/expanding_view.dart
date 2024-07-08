@@ -40,7 +40,7 @@ class _ExpandingContainerState extends State<ExpandingContainer> {
         valueListenable: containerExpandedState!,
         builder: (context, dynamic value, child) {
           return AnimatedContainer(
-            color: XColors.background(),
+            color: XColors.white(),
             height: widget.actualHeight,
             curve: Curves.fastOutSlowIn,
             duration: const Duration(seconds: 1),

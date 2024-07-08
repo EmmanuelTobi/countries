@@ -1,3 +1,4 @@
+import 'package:countries/main.dart';
 import 'package:countries/utils/bottom_model_sheet.dart';
 import 'package:countries/utils/colors.dart';
 import 'package:countries/utils/decorator.dart';
@@ -5,6 +6,7 @@ import 'package:countries/utils/extensions.dart';
 import 'package:countries/utils/inputs_field.dart';
 import 'package:countries/utils/navigator_handler.dart';
 import 'package:countries/utils/text.dart';
+import 'package:countries/utils/themes.dart';
 import 'package:countries/views/countries_home/countries_home_view_model.dart';
 import 'package:countries/views/countries_home/country_details_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +31,10 @@ class CountriesHome extends StatelessWidget {
                   CountriesHeaderView(
                     onSearchInput: (s) {
                       model.getCountriesFiltered(s: s!);
+                    },
+                    onThemeChange: (){
+                      model.changeThemes();
+                      navigateReplace(context, const MyApp());
                     },
                     onFilterTap: () {
 
@@ -152,12 +158,14 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
     super.key,
     this.onSearchInput,
     this.onLanguageTap,
-    this.onFilterTap
+    this.onFilterTap,
+    this.onThemeChange
   });
 
   final Function(String? s)? onSearchInput;
   final Function? onLanguageTap;
   final Function? onFilterTap;
+  final Function? onThemeChange;
 
   @override
   Widget build(BuildContext context, viewModel) {
@@ -170,16 +178,21 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
           child: SvgPicture.asset(
             'explore'.toSVG(),
             fit: BoxFit.contain,
+            colorFilter: ThemesSetup().isDark! ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
           ),
         ),
         const SizedBox(height: 10,),
-        Center(
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: SvgPicture.asset(
-              'light'.toSVG(),
-              fit: BoxFit.contain,
+        GestureDetector(
+          onTap: () => onThemeChange!(),
+          child: Center(
+            child: SizedBox(
+              height: 24,
+              width: 24,
+              child: SvgPicture.asset(
+                !ThemesSetup().isDark! ? 'light'.toSVG() : 'dark'.toSVG(),
+                fit: BoxFit.contain,
+                colorFilter: ColorFilter.mode(ThemesSetup().isDark! ? Colors.white : Colors.black54, BlendMode.srcIn),
+              ),
             ),
           ),
         ),
@@ -212,6 +225,7 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
                 child: SvgPicture.asset(
                   'language'.toSVG(),
                   fit: BoxFit.contain,
+                  colorFilter: ColorFilter.mode(ThemesSetup().isDark! ? Colors.white : Colors.black54, BlendMode.srcIn),
                 ),
               ),
               const SizedBox(width: 10,),
@@ -243,6 +257,7 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
                   child: SvgPicture.asset(
                     'filter'.toSVG(),
                     fit: BoxFit.contain,
+                    colorFilter: ColorFilter.mode(ThemesSetup().isDark! ? Colors.white : Colors.black54, BlendMode.srcIn),
                   ),
                 ),
                 const SizedBox(width: 10,),

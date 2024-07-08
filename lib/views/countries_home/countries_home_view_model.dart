@@ -1,7 +1,7 @@
 import 'package:countries/models/country_data_model.dart';
 import 'package:countries/services/countries_services.dart';
 import 'package:countries/utils/locator_setup.dart';
-import 'package:flutter/material.dart';
+import 'package:countries/utils/themes.dart';
 import 'package:stacked/stacked.dart';
 
 class CountriesHomeViewModel extends BaseViewModel {
@@ -52,6 +52,14 @@ class CountriesHomeViewModel extends BaseViewModel {
     }
 
     return countriesData;
+  }
+
+  void changeThemes() {  //////this can be set inside the countries service also so it can be called anywhere inside the app.
+    if(ThemesSetup().isDark!) {
+      countriesService.appThemeMode = AppThemeMode.LIGHT;
+    } else {
+      countriesService.appThemeMode = AppThemeMode.DARK;
+    }
   }
 
   List<CountryDataModel>? getCountriesFiltered({String? s = ''}) {
