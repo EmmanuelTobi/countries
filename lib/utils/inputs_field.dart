@@ -23,10 +23,12 @@ class MainInputField extends StatelessWidget {
         this.isEnabled = true,
         this.onFieldSubmitted,
         this.textInputAction,
+        this.colorFill,
         this.maxLines = 1,
         this.showHint = true,
         this.isForgottenOption = false,
         this.suffixIcon,
+        this.prefixIcon,
         this.inputFormatters}
       );
 
@@ -44,6 +46,7 @@ class MainInputField extends StatelessWidget {
   final bool copy;
   final bool autoValidate;
   final String? initialValue;
+  final Color? colorFill;
   final TextInputAction? textInputAction;
   final dynamic onFieldSubmitted;
   final int maxLines;
@@ -53,6 +56,7 @@ class MainInputField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Color? borderColor;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   final ValueNotifier<bool> hasError = ValueNotifier<bool>(false);
 
@@ -92,22 +96,23 @@ class MainInputField extends StatelessWidget {
           },
           textInputAction: textInputAction,
           decoration: InputDecoration(
-            fillColor: XColors.primaryColor().withOpacity(0.0),
+            fillColor: colorFill ?? XColors.primaryColor().withOpacity(0.0),
             filled: true,
-            hintStyle: const TextStyle(color: Colors.grey),
+            hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
             hintText: hint,
             alignLabelWithHint: true,
+            prefixIcon: prefixIcon,
             enabledBorder: OutlineInputBorder(
               borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               borderSide: BorderSide(
-                  color: XColors.primaryColor().withOpacity(0.1),
+                  color: borderColor ?? XColors.primaryColor().withOpacity(0.1),
                   width: 1
               ),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: const BorderRadius.all(Radius.circular(11.0)),
               borderSide: BorderSide(
-                  color: XColors.primaryColor().withOpacity(0.1),
+                  color: borderColor ?? XColors.primaryColor().withOpacity(0.1),
                   width: 1
               ),
             ),
@@ -125,7 +130,7 @@ class MainInputField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 borderSide: BorderSide(
-                    color: XColors.primaryColor(),
+                    color: borderColor ?? XColors.primaryColor(),
                     width: 2
                 )
             ),
@@ -142,7 +147,7 @@ class MainInputField extends StatelessWidget {
               bottom: 0,
               child: suffixIcon!
           )
-        ]
+        ],
       ],
     );
   }

@@ -201,6 +201,9 @@ class CountriesHeaderView extends ViewModelWidget<CountriesHomeViewModel> {
       MainInputField(
         hint: "Search Country",
         isEnabled: true,
+        colorFill: !ThemesSetup().isDark! ? Colors.grey.withOpacity(0.2) : Colors.white.withOpacity(0.1),
+        prefixIcon: const Icon(Icons.search_rounded),
+        borderColor: Colors.transparent,
         onChanged: onSearchInput!,
       ),
       const SizedBox(height: 15,),
