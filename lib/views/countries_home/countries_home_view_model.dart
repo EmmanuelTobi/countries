@@ -47,14 +47,18 @@ class CountriesHomeViewModel extends BaseViewModel {
       countriesData = countriesService.countriesDataList;
     }
 
+    print(isSearching);
+
     if(isSearching == false ) {
+      countriesData = countriesService.countriesDataList!.where((element) => element.name![0].toUpperCase() == letter).toList();
+    } else {
       countriesData = countriesData!.where((element) => element.name![0].toUpperCase() == letter).toList();
     }
 
     return countriesData;
   }
 
-  void changeThemes() {  //////this can be set inside the countries service also so it can be called anywhere inside the app.
+  void changeThemes() {  ///this can be set inside the countries service also so it can be called anywhere inside the app.
     if(ThemesSetup().isDark!) {
       countriesService.appThemeMode = AppThemeMode.LIGHT;
     } else {
@@ -71,6 +75,8 @@ class CountriesHomeViewModel extends BaseViewModel {
 
       filteringLetters = [ s[0].toUpperCase() ];
       letters = filteringLetters;
+      isSearching = true;
+
       notifyListeners();
 
     }
