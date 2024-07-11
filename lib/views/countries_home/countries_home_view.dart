@@ -39,17 +39,23 @@ class CountriesHome extends StatelessWidget {
                     onFilterTap: () {
 
                       listHelperPicker(
-                      title: 'Filter',
-                      listString: model.regionFilters,
-                      listString2: model.gmtFilters,
-                      selectedListString: model.selectedRegionFilters,
-                      selectedListString2: model.selectedGmtFilters,
-                      countriesHomeViewModel: model,
-                      selected: (s, type) {
-                        model.updateSelectedFilteringList(s: s, filterType: type);
-                      },
-                      context: context,
-                    );
+                        title: 'Filter',
+                        listString: model.regionFilters,
+                        listString2: model.gmtFilters,
+                        selectedListString: model.selectedRegionFilters,
+                        selectedListString2: model.selectedGmtFilters,
+                        countriesHomeViewModel: model,
+                        onFilter: () {
+                          model.getCountriesFilteredFromModal();
+                        },
+                        onReset: () {
+                          model.resetFilteredFromModal();
+                        },
+                        selected: (s, type) {
+                          model.updateSelectedFilteringList(s: s, filterType: type);
+                        },
+                        context: context,
+                      );
 
                   },
                     onLanguageTap: () {

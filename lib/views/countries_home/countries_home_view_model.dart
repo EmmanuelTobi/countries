@@ -96,6 +96,52 @@ class CountriesHomeViewModel extends BaseViewModel {
      return filteredCountriesData;
   }
 
+  List<CountryDataModel>? getCountriesFilteredFromModal() {
+
+    if(gmtFilters.isNotEmpty || regionFilters.isNotEmpty) {
+
+      filteringLetters!.clear();
+      filteredCountriesData!.clear();
+      isSearching = true;
+
+      if(gmtFilters.isNotEmpty) {
+        for (var gmts in gmtFilters) {
+          if(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList().isNotEmpty) {
+            filteredCountriesData!.add(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList()[0]);
+            filteringLetters!.add(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList()[0].name![0].toUpperCase());
+          }
+        }
+      }
+
+      if(regionFilters.isNotEmpty) {
+        for (var regions in regionFilters) {
+          if(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList().isNotEmpty) {
+            filteredCountriesData!.add(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList()[0]);
+            filteringLetters!.add(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList()[0].name![0].toUpperCase());
+          }
+        }
+      }
+
+      letters = filteringLetters;
+      countriesData = filteredCountriesData;
+      notifyListeners();
+
+    } else {
+
+      if(gmtFilters.isEmpty && regionFilters.isEmpty) {
+        isSearching = false;
+        filteredCountriesData = countriesData;
+      }
+
+    }
+
+    return filteredCountriesData;
+
+  }
+
+  void resetFilteredFromModal() {
+    initialise();
+  }
 
   List<Widget>? pages({String? img1, String? img2, String? img3}) {
 
