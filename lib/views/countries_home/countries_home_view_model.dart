@@ -55,7 +55,7 @@ class CountriesHomeViewModel extends BaseViewModel {
       countriesData = countriesService.countriesDataList;
     }
 
-    print(isSearching);
+    //print(isSearching);
 
     if(isSearching == false ) {
       countriesData = countriesService.countriesDataList!.where((element) => element.name![0].toUpperCase() == letter).toList();
@@ -89,7 +89,7 @@ class CountriesHomeViewModel extends BaseViewModel {
 
     }
 
-     filteredCountriesData = countriesService.countriesDataList!.where((element) => element.name!.contains(s!)).toList();
+     filteredCountriesData = countriesService.countriesDataList!.where((element) => element.name!.contains(s)).toList();
      countriesData = filteredCountriesData;
      notifyListeners();
 
@@ -98,27 +98,35 @@ class CountriesHomeViewModel extends BaseViewModel {
 
   List<CountryDataModel>? getCountriesFilteredFromModal() {
 
-    if(gmtFilters.isNotEmpty || regionFilters.isNotEmpty) {
+    print(selectedGmtFilters.toString());
+    print(selectedRegionFilters.toString());
+
+    if(selectedGmtFilters.isNotEmpty || selectedRegionFilters.isNotEmpty) {
 
       filteringLetters!.clear();
       filteredCountriesData!.clear();
       isSearching = true;
 
-      if(gmtFilters.isNotEmpty) {
-        for (var gmts in gmtFilters) {
+      if(selectedGmtFilters.isNotEmpty) {
+        for (var gmts in selectedGmtFilters) {
           if(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList().isNotEmpty) {
-            filteredCountriesData!.add(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList()[0]);
-            filteringLetters!.add(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList()[0].name![0].toUpperCase());
+            filteredCountriesData!.addAll(countriesService.countriesDataList!.where((element) => element.timezones!.contains(gmts)).toList());
+          }
+        }
+
+      }
+
+      if(selectedRegionFilters.isNotEmpty) {
+        for (var regions in  selectedRegionFilters) {
+          if(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList().isNotEmpty) {
+            filteredCountriesData!.addAll(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList());
           }
         }
       }
 
-      if(regionFilters.isNotEmpty) {
-        for (var regions in regionFilters) {
-          if(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList().isNotEmpty) {
-            filteredCountriesData!.add(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList()[0]);
-            filteringLetters!.add(countriesService.countriesDataList!.where((element) => element.continents!.contains(regions)).toList()[0].name![0].toUpperCase());
-          }
+      for(var f in filteredCountriesData!) {
+        if(!filteringLetters!.contains(f.name![0].toUpperCase())) {
+          filteringLetters!.add(f.name![0].toUpperCase());
         }
       }
 
@@ -128,7 +136,7 @@ class CountriesHomeViewModel extends BaseViewModel {
 
     } else {
 
-      if(gmtFilters.isEmpty && regionFilters.isEmpty) {
+      if(selectedRegionFilters.isEmpty && selectedGmtFilters.isEmpty) {
         isSearching = false;
         filteredCountriesData = countriesData;
       }
@@ -139,8 +147,23 @@ class CountriesHomeViewModel extends BaseViewModel {
 
   }
 
-  void resetFilteredFromModal() {
-    initialise();
+  void resetFilteredFromModal() async {
+    filteringLetters!.clear();
+    filteredCountriesData!.clear();
+
+    countriesData!.clear();
+    filteredCountriesData!.clear();
+
+    resetAllLetters();
+
+    isSearching = false;
+
+    countriesData = countriesService.countriesDataList;
+    filteredCountriesData = countriesService.countriesDataList;
+
+    print(countriesService.countriesDataList!.length);
+
+    notifyListeners();
   }
 
   List<Widget>? pages({String? img1, String? img2, String? img3}) {
@@ -184,6 +207,16 @@ class CountriesHomeViewModel extends BaseViewModel {
 
     ];
 
+  }
+
+  void resetAllLetters() {
+    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G',
+      'H', 'I', 'J', 'K', 'L', 'M', 'O', 'P', 'Q', 'R', 'S', 'T',
+      'U', 'Q', 'V', 'W', 'X', 'Y', 'Z'];
+
+    filteringLetters = letters;
+
+    notifyListeners();
   }
 
   void onPageChanged(int index) {

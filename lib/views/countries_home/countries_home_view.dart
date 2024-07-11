@@ -47,9 +47,11 @@ class CountriesHome extends StatelessWidget {
                         countriesHomeViewModel: model,
                         onFilter: () {
                           model.getCountriesFilteredFromModal();
+                          popView(context);
                         },
                         onReset: () {
                           model.resetFilteredFromModal();
+                          popView(context);
                         },
                         selected: (s, type) {
                           model.updateSelectedFilteringList(s: s, filterType: type);
